@@ -1,0 +1,137 @@
+
+
+
+
+<?php
+include('../config/dbcon.php');
+ 
+
+if(isset($_POST['add'])){
+    $extension=array('jpeg','jpg','png','gif');
+	foreach ($_FILES['image']['tmp_name'] as $key => $value) {
+		$filename=$_FILES['image']['name'][$key];
+		$filename_tmp=$_FILES['image']['tmp_name'][$key];
+		echo '<br>';
+		$ext=pathinfo($filename,PATHINFO_EXTENSION);
+
+		$finalimg='';
+		if(in_array($ext,$extension))
+		{
+			if(!file_exists('../upload/category/mobile/image/'.$filename))
+			{
+			move_uploaded_file($filename_tmp, '../upload/category/mobile/image/'.$filename);
+			$finalimg=$filename;
+			}else
+			{
+				 $filename=str_replace('.','-',basename($filename,$ext));
+				 $newfilename=$filename.time().".".$ext;
+				 move_uploaded_file($filename_tmp, '../upload/category/mobile/image/'.$newfilename);
+				 $finalimg=$newfilename;
+			}
+			$creattime=date('Y-m-d h:i:s');
+			//insert
+			$insertqry="INSERT INTO `student`( image) VALUES ('$finalimg')";
+			mysqli_query($con,$insertqry);
+
+			header('Location:../mobile-add.php');
+            exit(0);
+		}else
+		{
+			//display error
+		}
+	}
+}
+ 
+ 
+?>
+
+
+
+
+
+
+
+<?php
+include('../config/dbcon.php');
+ 
+
+if(isset($_POST['add'])){
+	$extension=array('jpeg','jpg','png','gif','jfif');
+	$x=1;
+    foreach ($_FILES['image']['tmp_name'] as $key => $image) {
+		
+		$imageTmpName = $_FILES['image']['tmp_name'][$key];
+		$imageName = $_FILES['image']['name'][$key];
+		$ext=pathinfo($imageName,PATHINFO_EXTENSION);
+		$filename = time().$x.'.'.$ext;
+		$x++;
+		if(in_array($ext,$extension)){
+			move_uploaded_file($imageTmpName,'../upload/category/mobile/image/'.$filename);
+
+			$query = "INSERT INTO student SET image='$filename' " ;
+			$run = mysqli_query($con,$query);
+    		}
+		
+		else{
+			header('Location:../mobile-add.php');
+			exit(0);
+		}
+	}
+	header('Location:../mobile-add.php');
+	exit(0);
+    }
+ 
+ 
+?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+include('../config/dbcon.php');
+ 
+
+if(isset($_POST['add'])){
+	$file=array();
+	$extension=array('jpeg','jpg','png','gif','jfif');
+	$x=1;
+    foreach ($_FILES['image']['tmp_name'] as $key => $image) {
+		
+		$imageTmpName = $_FILES['image']['tmp_name'][$key];
+		$imageName = $_FILES['image']['name'][$key];
+		$ext=pathinfo($imageName,PATHINFO_EXTENSION);
+		$filename = time().$x.'.'.$ext;
+		$x++;
+		if(in_array($ext,$extension)){
+			//move_uploaded_file($imageTmpName,'../upload/category/mobile/image/'.$filename);
+			//$run = mysqli_query($con,$query);
+			
+			$file[] = $filename;
+			
+		}
+		
+	}
+
+	
+	$files = implode(", ", $file);
+	echo $files;
+
+
+
+
+	$query = "INSERT INTO student SET image='$files' " ;
+		
+	}
+	
